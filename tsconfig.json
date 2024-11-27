@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "lib": ["DOM", "DOM.Iterable", "ESNext"],
+      "jsx": "react-jsx",
+      "moduleResolution": "Node",
+      "strict": true,
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      },
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "types": ["vite/client"] // Asegúrate de que esté incluido
+    },
+    "include": ["src", "vite-env.d.ts"], // Incluye tu archivo de definiciones
+    "exclude": ["node_modules", "dist"]
+  }
+  
