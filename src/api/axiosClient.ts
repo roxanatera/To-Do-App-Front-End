@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`, // Verifica que esto esté correcto
+  baseURL: 'http://localhost:5000/api'
 });
 
 // Explicitly set JSON as the content type
