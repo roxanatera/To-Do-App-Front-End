@@ -34,9 +34,9 @@ export const useTasks = () => {
     }
 
     try {
-      console.log("Adding new task:", newTask); // Log para diagnóstico
+      console.log("Adding new task:", newTask);
       await createTask({ ...newTask, userId });
-      await fetchTasks(); // Recarga todas las tareas desde el backend
+      await fetchTasks(); 
     } catch (err) {
       console.error("Error al crear la tarea:", err);
       setError("Error al crear la tarea");

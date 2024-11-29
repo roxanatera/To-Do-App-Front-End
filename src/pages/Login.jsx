@@ -40,8 +40,8 @@ export default function Login() {
 
     try {
       const response = await axiosClient.post("/auth/login", { email, password });
-      localStorage.setItem("userId", response.data.user.id);
-      navigate("/tasks"); // Redirige al panel de tareas
+      localStorage.setItem("token", response.data.token);
+      navigate("/tasks");
     } catch (error) {
       setGeneralError(
         error.response?.data?.message || "Error al iniciar sesión. Intenta de nuevo."
@@ -52,32 +52,24 @@ export default function Login() {
   return (
     <div
       className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/to-do.webp')" }}
+      style={{
+        backgroundImage: "url('/to-do.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
-      {/* Superposición para oscurecer la imagen de fondo */}
       <div className="absolute inset-0 bg-black opacity-30"></div>
-
-      {/* Contenedor del contenido */}
-      <div className="relative z-10 text-center mb-8">
-        
-      </div>
-
-      {/* Formulario */}
       <form
         onSubmit={handleLogin}
-        className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-md w-full max-w-sm"
+        className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-md w-full max-w-sm sm:max-w-md sm:w-11/12 md:w-3/4 lg:w-1/2 xl:w-1/3"
       >
-        <h1 className="text-4xl font-bold text-blue-500 mb-5">Inicia Sesión</h1>
-        {/* General error message */}
+        <h1 className="text-4xl font-bold text-blue-500 mb-5 text-center">Inicia Sesión</h1>
         {generalError && (
           <p className="text-red-500 text-sm mb-4 text-center">{generalError}</p>
         )}
 
-        {/* Campo de Correo */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Correo
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Correo</label>
           <input
             type="email"
             value={email}
@@ -92,11 +84,8 @@ export default function Login() {
           )}
         </div>
 
-        {/* Campo de Contraseña */}
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Contraseña
-          </label>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
           <input
             type="password"
             value={password}
@@ -111,7 +100,6 @@ export default function Login() {
           )}
         </div>
 
-        {/* Botón de iniciar sesión */}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
@@ -119,7 +107,6 @@ export default function Login() {
           Iniciar Sesión
         </button>
 
-        {/* Link de registro */}
         <p className="text-center text-sm text-gray-600 mt-4">
           ¿No tienes cuenta?{" "}
           <Link to="/register" className="text-blue-500 hover:underline">

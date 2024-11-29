@@ -1,41 +1,43 @@
 import { useState } from "react";
 
-export default function TaskForm({ onAddTask, userId }) {
+
+export default function TaskForm({ onAddTask }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para el botón
-  const [error, setError] = useState(""); // Estado para mensajes de error
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title.trim() || !description.trim()) {
-      setError("Por favor completa todos los campos."); // Mensaje de error si falta información
+      setError("Por favor completa todos los campos.");
       return;
     }
 
     try {
-      setIsSubmitting(true); // Desactiva el botón mientras se envía la solicitud
-      await onAddTask({ title, description, userId });
-      setTitle(""); // Limpia el campo de título
-      setDescription(""); // Limpia el campo de descripción
-      setError(""); // Limpia el mensaje de error
+      setIsSubmitting(true);
+      await onAddTask({ title, description }); 
+      setTitle("");
+      setDescription("");
+      setError("");
     } catch (err) {
       console.error("Error al crear la tarea:", err.response?.data?.message || err.message);
       setError(err.response?.data?.message || "Error al crear la tarea.");
     } finally {
-      setIsSubmitting(false); // Reactiva el botón
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-gradient-to-r mx-auto p-4 max-w-3xl bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-xl rounded-lg mt-12">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gradient-to-r mx-auto p-4 max-w-3xl bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-xl rounded-lg mt-12"
+    >
       <h2 className="text-2xl font-bold mb-6 text-center">Crear Nueva Tarea</h2>
 
       {error && (
-        <p className="bg-red-500 text-white text-sm p-2 rounded mb-4">
-          {error}
-        </p>
+        <p className="bg-red-500 text-white text-sm p-2 rounded mb-4">{error}</p>
       )}
 
       {/* Campo Título */}
@@ -69,7 +71,9 @@ export default function TaskForm({ onAddTask, userId }) {
         type="submit"
         disabled={isSubmitting}
         className={`w-full py-2 px-4 rounded-md text-white font-semibold transition-all duration-300 ${
-          isSubmitting ? "bg-blue-300 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-800"
+          isSubmitting
+            ? "bg-blue-300 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-800"
         }`}
       >
         {isSubmitting ? "Creando..." : "Crear Tarea"}

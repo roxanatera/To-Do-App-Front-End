@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
-import { useApp } from '../context/AppContext'; // Importar el contexto de la aplicación
+import { useApp } from "../context/AppContext"; // Importar el contexto de la aplicación
 
 export default function Navbar() {
   const navigate = useNavigate(); // Definir navigate con el hook useNavigate
   const { handleLogout } = useApp();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Nuevo estado
+
+  useEffect(() => {
+    // Verificar si hay un token en localStorage
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
 
   const goHome = () => {
-    navigate("/"); 
+    if (isAuthenticated) {
+      navigate("/tasks"); // Redirigir al panel si está autenticado
+    } else {
+      navigate("/"); // Redirigir a la página de inicio
+    }
   };
 
   return (
@@ -21,12 +32,14 @@ export default function Navbar() {
           />
           <span className="text-2xl font-bold">To-Do App</span>
         </div>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition duration-300"
-        >
-          Cerrar Sesión
-        </button>
+        {isAuthenticated && (
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition duration-300"
+          >
+            Cerrar Sesión
+          </button>
+        )}
       </div>
     </nav>
   );

@@ -9,13 +9,10 @@ export default function TaskPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const userId = localStorage.getItem("userId");
-
   useEffect(() => {
     const fetchTasks = async () => {
-    if (!userId) return; // Evita cargar tareas si no hay usuario
       try {
-        const response = await getTasks(userId);
+        const response = await getTasks(); // Elimina la dependencia de `userId`
         setTasks(response.tasks || []);
       } catch (err) {
         console.error("Error al cargar las tareas:", err);
@@ -25,17 +22,16 @@ export default function TaskPage() {
       }
     };
 
-    if (userId) fetchTasks();
-  }, [userId]);
+    fetchTasks(); // Carga las tareas al montar el componente
+  }, []);
 
   const handleAddTask = async (newTask) => {
     try {
-      const response = await createTask({ ...newTask, userId });
+      const response = await createTask(newTask); // Envía solo los datos de la tarea
       setTasks((prevTasks) => {
-        
-        const taskExists = prevTasks.find(task => task._id === response.task._id);
+        const taskExists = prevTasks.find((task) => task._id === response.task._id);
         if (taskExists) {
-          return prevTasks; 
+          return prevTasks; // Evita duplicados
         }
         return [...prevTasks, response.task];
       });
@@ -44,7 +40,6 @@ export default function TaskPage() {
       alert("Error al agregar tarea.");
     }
   };
-  
 
   const handleUpdateTask = async (updatedTask) => {
     try {
@@ -75,7 +70,7 @@ export default function TaskPage() {
       <Navbar />
       <div className="container mx-auto p-4">
         {error && <p className="text-red-500">{error}</p>}
-        <TaskForm onAddTask={handleAddTask} userId={userId} />
+        <TaskForm onAddTask={handleAddTask} />
         {loading ? (
           <p>Cargando tareas...</p>
         ) : (

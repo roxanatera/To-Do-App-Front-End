@@ -1,11 +1,18 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider } from "./context/AppContext"; // Asegúrate de que la ruta sea correcta
+import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TaskPage from "./pages/TaskPage";
 
 function App() {
-  const userId = localStorage.getItem("userId"); // Autenticación básica con localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para manejar autenticación
+
+  useEffect(() => {
+    // Verificar si hay un token en localStorage
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token); // Actualiza el estado según la existencia del token
+  }, []);
 
   return (
     <Router>
@@ -15,7 +22,7 @@ function App() {
           <Route
             path="/"
             element={
-              userId ? <Navigate to="/tasks" replace /> : <Navigate to="/login" replace />
+              isAuthenticated ? <Navigate to="/tasks" replace /> : <Navigate to="/login" replace />
             }
           />
           {/* Rutas definidas */}
@@ -23,7 +30,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route
             path="/tasks"
-            element={userId ? <TaskPage /> : <Navigate to="/login" replace />}
+            element={isAuthenticated ? <TaskPage /> : <Navigate to="/login" replace />}
           />
           {/* Ruta para manejar rutas no encontradas */}
           <Route path="*" element={<Navigate to="/" replace />} />
