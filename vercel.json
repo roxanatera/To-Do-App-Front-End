@@ -6,7 +6,7 @@
       }
     },
     "functions": {
-      "src/api/*.js": {
+      "dist/src/api/*.js": {
         "memory": 128,
         "maxDuration": 10
       }
