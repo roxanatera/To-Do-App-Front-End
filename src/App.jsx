@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AppProvider } from "./context/AppContext"; // Asegúrate de que la ruta sea correcta
-import { useState, useEffect } from "react";
+import { AppProvider } from "./context/AppContext";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import TaskPage from "./pages/TaskPage";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para manejar autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
   useEffect(() => {
     // Verificar si hay un token en localStorage

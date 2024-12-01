@@ -63,6 +63,8 @@ export default function Register() {
     >
       <div className="absolute inset-0 bg-black opacity-50"></div> {/* Sombreado oscuro */}
       <div className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-lg w-full max-w-sm">
+      
+       
         <h2 className="text-center text-2xl font-bold text-blue-500 mb-6">Regístrate</h2>
 
         <form onSubmit={handleRegister}>

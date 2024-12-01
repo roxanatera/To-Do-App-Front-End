@@ -33,6 +33,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'prefer-const': 'off', // Sobreescribe prefer-const para desactivarlo
     },
+    
   },
 ]
