@@ -1,7 +1,6 @@
-import { useState } from "react";
-import axiosClient from "../api/axiosClient";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import productivityGif from "../assets/productivity.gif"; // Importa el GIF animado
+import axiosClient from "../api/axiosClient";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -13,10 +12,19 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     let newErrors = {};
-    if (!name.trim()) newErrors.name = "El nombre es obligatorio.";
-    if (!email.trim()) newErrors.email = "El correo es obligatorio.";
-    if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "El correo no tiene un formato válido.";
-    if (!password.trim()) newErrors.password = "La contraseña es obligatoria.";
+    if (!name.trim()) {
+      newErrors.name = "El nombre es obligatorio.";
+    } else if (name.trim().length < 3) {
+      newErrors.name = "El nombre debe tener al menos 3 caracteres."; 
+    }
+    if (!email.trim()) {
+      newErrors.email = "El correo es obligatorio.";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "El correo no tiene un formato válido.";
+    }
+    if (!password.trim()) {
+      newErrors.password = "La contraseña es obligatoria.";
+    }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -38,7 +46,7 @@ export default function Register() {
     } catch (error) {
       console.error("Error al registrar usuario:", error.response?.data || error.message);
       setErrors({
-        general: error.response?.data?.message || "Error al registrar el usuario. Por favor, inténtalo nuevamente.",
+        general: error?.response?.data?.message ?? "No se pudo completar el registro. Verifica los datos e inténtalo de nuevo.",
       });
     }
   };
@@ -47,23 +55,15 @@ export default function Register() {
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center px-4"
       style={{
-        backgroundImage: "url('/to-do.webp')",
+        backgroundImage: "url('/to-do.webp')", // Imagen de fondo
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-      <div className="relative z-10 bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg">
-        {/* GIF Animado */}
-        <div className="flex justify-center mb-6">
-          <img
-            src={productivityGif}
-            alt="Organiza tus tareas"
-            className="w-24 h-24 md:w-32 md:h-32 object-contain"
-          />
-        </div>
+      <div className="absolute inset-0 bg-black opacity-50"></div> {/* Sombreado oscuro */}
+      <div className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 className="text-center text-2xl font-bold text-blue-500 mb-6">Regístrate</h2>
 
-        {/* Formulario */}
         <form onSubmit={handleRegister}>
           {errors.general && (
             <p className="bg-red-500 text-white text-sm p-2 rounded mb-4">{errors.general}</p>
@@ -93,7 +93,7 @@ export default function Register() {
             {errors.email && <p className="text-red-500 text-xs italic mt-2">{errors.email}</p>}
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
             <input
               type="password"

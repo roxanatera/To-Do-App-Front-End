@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 export default function TaskForm({ onAddTask }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -17,7 +16,7 @@ export default function TaskForm({ onAddTask }) {
 
     try {
       setIsSubmitting(true);
-      await onAddTask({ title, description }); 
+      await onAddTask({ title, description });
       setTitle("");
       setDescription("");
       setError("");
@@ -32,12 +31,12 @@ export default function TaskForm({ onAddTask }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-gradient-to-r mx-auto p-4 max-w-3xl bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-xl rounded-lg mt-12"
+      className="bg-gradient-to-r from-blue-500 to-blue-700 bg-opacity-90 text-white shadow-xl rounded-lg p-6 max-w-3xl mx-auto mt-12 transition-all duration-300"
     >
       <h2 className="text-2xl font-bold mb-6 text-center">Crear Nueva Tarea</h2>
 
       {error && (
-        <p className="bg-red-500 text-white text-sm p-2 rounded mb-4">{error}</p>
+        <p className="bg-red-500 bg-opacity-90 text-white text-sm p-2 rounded mb-4">{error}</p>
       )}
 
       {/* Campo Título */}
@@ -47,7 +46,7 @@ export default function TaskForm({ onAddTask }) {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:ring focus:ring-blue-300"
+          className="w-full bg-white bg-opacity-90 text-gray-700 border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Escribe el título de la tarea"
           disabled={isSubmitting}
         />
@@ -59,7 +58,7 @@ export default function TaskForm({ onAddTask }) {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full bg-white text-gray-700 border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:ring focus:ring-blue-300"
+          className="w-full bg-white bg-opacity-90 text-gray-700 border border-gray-300 rounded-md py-2 px-4 leading-tight focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Escribe una breve descripción de la tarea"
           rows="4"
           disabled={isSubmitting}

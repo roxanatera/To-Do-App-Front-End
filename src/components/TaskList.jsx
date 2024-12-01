@@ -19,17 +19,22 @@ export default function TaskList({ tasks, onUpdateTask, onDeleteTask }) {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-3xl bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-xl rounded-lg mt-12">
+    <div className="container mx-auto p-4 max-w-3xl bg-gradient-to-r from-blue-500 to-blue-700 bg-opacity-90 text-white shadow-xl rounded-lg mt-12">
       <h1 className="text-3xl text-center font-bold mb-6 mt-4">Lista de Tareas</h1>
       <ul className="space-y-4">
         {tasks.map((task) => (
-          <li key={task._id} className="bg-white bg-opacity-25 shadow-md rounded p-4">
+          <li
+            key={task._id}
+            className="bg-white bg-opacity-25 shadow-md rounded p-4 hover:bg-opacity-50 transition-all duration-300"
+          >
             {editingTask && editingTask._id === task._id ? (
               <form onSubmit={handleUpdateTask} className="space-y-3">
                 <input
                   type="text"
                   value={editingTask.title}
-                  onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTask({ ...editingTask, title: e.target.value })
+                  }
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                   placeholder="Título de la tarea"
                 />
@@ -80,7 +85,6 @@ export default function TaskList({ tasks, onUpdateTask, onDeleteTask }) {
                     </button>
                   </div>
                 </div>
-                {/* Fechas de creación y actualización */}
                 <div className="text-sm text-white mt-2">
                   <p>
                     <strong>Creado:</strong>{" "}

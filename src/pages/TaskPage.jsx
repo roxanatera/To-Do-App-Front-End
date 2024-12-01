@@ -12,7 +12,7 @@ export default function TaskPage() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await getTasks(); // Elimina la dependencia de `userId`
+        const response = await getTasks(); 
         setTasks(response.tasks || []);
       } catch (err) {
         console.error("Error al cargar las tareas:", err);
