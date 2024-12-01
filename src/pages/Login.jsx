@@ -40,7 +40,12 @@ export default function Login() {
 
     try {
       const response = await axiosClient.post("/auth/login", { email, password });
+
+      // Guarda el token y la información del usuario
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.user.name); // Guarda el nombre del usuario
+      localStorage.setItem("userEmail", response.data.user.email); // Guarda el correo del usuario
+
       navigate("/tasks");
     } catch (error) {
       setGeneralError(

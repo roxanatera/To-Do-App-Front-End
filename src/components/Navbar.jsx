@@ -6,11 +6,18 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { handleLogout } = useApp();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showModal, setShowModal] = useState(false); // Estado para manejar el modal
+  const [userName, setUserName] = useState(""); // Estado para almacenar el nombre del usuario
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
+
+    // Obtén el nombre del usuario desde localStorage
+    const storedUserName = localStorage.getItem("userName");
+    if (storedUserName) {
+      setUserName(storedUserName);
+    }
   }, []);
 
   const goHome = () => {
@@ -22,12 +29,13 @@ export default function Navbar() {
   };
 
   const confirmLogout = () => {
-    handleLogout(); // Llama al método de cierre de sesión
+    handleLogout(); // Limpia datos del contexto y localStorage
+    setUserName(""); // Limpia el nombre del usuario
     setShowModal(false); // Cierra el modal
   };
 
   const cancelLogout = () => {
-    setShowModal(false); // Cierra el modal sin cerrar sesión
+    setShowModal(false); // Cierra el modal sin realizar ninguna acción
   };
 
   return (
@@ -43,12 +51,17 @@ export default function Navbar() {
             <span className="text-2xl font-bold">To-Do App</span>
           </div>
           {isAuthenticated && (
-            <button
-              onClick={() => setShowModal(true)} // Muestra el modal
-              className="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition duration-300"
-            >
-              Cerrar Sesión
-            </button>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-200">
+                Bienvenido, <strong>{userName}</strong>
+              </span>
+              <button
+                onClick={() => setShowModal(true)}
+                className="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-600 transition duration-300"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
           )}
         </div>
       </nav>
@@ -58,8 +71,6 @@ export default function Navbar() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
             <h3 className="text-lg font-bold mb-4">¿Estás seguro de cerrar sesión?</h3>
-            <p className="text-sm text-gray-600 mb-6">
-            </p>
             <div className="flex justify-end space-x-4">
               <button
                 onClick={cancelLogout}

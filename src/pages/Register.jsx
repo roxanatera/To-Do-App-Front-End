@@ -40,6 +40,7 @@ export default function Register() {
 
       // Guarda el token en localStorage
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.user.name); // Guarda el nombre del usuario
 
       // Redirige al panel de tareas directamente
       navigate("/tasks");
