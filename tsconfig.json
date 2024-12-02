@@ -14,9 +14,9 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "types": ["vite/client"] // Asegúrate de que esté incluido
+      "types": ["vite/client"]
     },
-    "include": ["src", "vite-env.d.ts"], // Incluye tu archivo de definiciones
+    "include": ["src", "vite-env.d.ts"],
     "exclude": ["node_modules", "dist"]
   }
   
