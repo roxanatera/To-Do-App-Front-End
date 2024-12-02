@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/", 
   build: {
-    outDir: "dist", // Carpeta de salida para los archivos de producción
+    outDir: "dist", 
+    emptyOutDir: true, 
   },
 });
