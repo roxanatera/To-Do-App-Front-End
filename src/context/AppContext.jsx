@@ -5,28 +5,36 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  const [tasks, setTasks] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token")); // Estado de autenticación
+  const [userName, setUserName] = useState(localStorage.getItem("userName")); // Cargar nombre desde localStorage
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token); // Actualiza el estado según la existencia del token
+    if (!token) {
+      setIsAuthenticated(false);
+      setUserId(null);
+      setUserName(null);
+    }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    setTasks([]);
+    localStorage.removeItem("userName");
     setUserId(null);
-    setIsAuthenticated(false); // Actualiza el estado
+    setUserName(null);
+    setIsAuthenticated(false);
     navigate("/login");
   };
 
-  const login = (id) => {
+  const login = (id, token, name) => {
     localStorage.setItem("userId", id);
+    localStorage.setItem("token", token);
+    localStorage.setItem("userName", name); // Almacena el nombre del usuario
     setUserId(id);
-    setIsAuthenticated(true); // Marca como autenticado
+    setUserName(name); // Actualiza el estado global
+    setIsAuthenticated(true);
     navigate("/tasks");
   };
 
@@ -34,12 +42,10 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         userId,
-        setUserId,
-        tasks,
-        setTasks,
-        handleLogout,
-        login,
+        userName,
         isAuthenticated,
+        login,
+        handleLogout,
       }}
     >
       {children}

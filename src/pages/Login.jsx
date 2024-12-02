@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
+import { useApp } from "../context/AppContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [generalError, setGeneralError] = useState("");
-  const navigate = useNavigate();
+  const { login } = useApp(); // Usa la función login del contexto
 
   const validateInputs = () => {
     let isValid = true;
@@ -41,12 +42,12 @@ export default function Login() {
     try {
       const response = await axiosClient.post("/auth/login", { email, password });
 
-      // Guarda el token y la información del usuario
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userName", response.data.user.name); // Guarda el nombre del usuario
-      localStorage.setItem("userEmail", response.data.user.email); // Guarda el correo del usuario
-
-      navigate("/tasks");
+      if (response.data.token && response.data.user) {
+        // Pasa el ID, token y nombre del usuario al contexto
+        login(response.data.user.id, response.data.token, response.data.user.name);
+      } else {
+        throw new Error("Respuesta inválida del servidor.");
+      }
     } catch (error) {
       setGeneralError(
         error.response?.data?.message || "Error al iniciar sesión. Intenta de nuevo."
@@ -66,52 +67,44 @@ export default function Login() {
       <div className="absolute inset-0 bg-black opacity-30"></div>
       <form
         onSubmit={handleLogin}
-        className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-md w-full max-w-sm sm:max-w-md sm:w-11/12 md:w-3/4 lg:w-1/2 xl:w-1/3"
+        className="relative z-10 bg-white bg-opacity-90 p-6 rounded-lg shadow-md w-full max-w-sm"
       >
         <h1 className="text-4xl font-bold text-blue-500 mb-5 text-center">Inicia Sesión</h1>
-        {generalError && (
-          <p className="text-red-500 text-sm mb-4 text-center">{generalError}</p>
-        )}
-
+        {generalError && <p className="text-red-500 text-sm mb-4 text-center">{generalError}</p>}
+        {/* Correo */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Correo</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring ${
+            className={`w-full px-3 py-2 border rounded ${
               errors.email ? "border-red-500" : "focus:ring-blue-300"
             }`}
             placeholder="Correo"
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs italic">{errors.email}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
         </div>
-
+        {/* Contraseña */}
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring ${
+            className={`w-full px-3 py-2 border rounded ${
               errors.password ? "border-red-500" : "focus:ring-blue-300"
             }`}
             placeholder="Contraseña"
           />
-          {errors.password && (
-            <p className="text-red-500 text-xs italic">{errors.password}</p>
-          )}
+          {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}
         </div>
-
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Iniciar Sesión
         </button>
-
         <p className="text-center text-sm text-gray-600 mt-4">
           ¿No tienes cuenta?{" "}
           <Link to="/register" className="text-blue-500 hover:underline">

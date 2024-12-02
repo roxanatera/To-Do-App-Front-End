@@ -1,29 +1,28 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import { useApp } from "../context/AppContext";
 import TaskForm from "../components/TaskForm";
 import TaskList from "../components/TaskList";
 import { getTasks, createTask, updateTask, deleteTask } from "../services/taskService";
 
 export default function TaskPage() {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const { isAuthenticated, handleLogout } = useApp();
+  const [tasks, setTasks] = useState([]); // Estado para las tareas
+  const [loading, setLoading] = useState(true); // Estado para el cargando
+  const [error, setError] = useState(""); // Estado para errores
 
-  // Verifica la autenticación al montar el componente
+  // Redirige al login si no está autenticado
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login"); // Redirige al usuario si no está autenticado
+    if (!isAuthenticated) {
+      handleLogout();
     }
-  }, [navigate]);
+  }, [isAuthenticated, handleLogout]);
 
+  // Cargar las tareas al montar el componente
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await getTasks();
-        setTasks(response.tasks || []);
+        setTasks(response.tasks || []); // Carga las tareas
       } catch (err) {
         console.error("Error al cargar las tareas:", err);
         setError("No se pudieron cargar las tareas.");
@@ -32,19 +31,13 @@ export default function TaskPage() {
       }
     };
 
-    fetchTasks(); // Carga las tareas al montar el componente
+    fetchTasks();
   }, []);
 
   const handleAddTask = async (newTask) => {
     try {
-      const response = await createTask(newTask); // Envía solo los datos de la tarea
-      setTasks((prevTasks) => {
-        const taskExists = prevTasks.find((task) => task._id === response.task._id);
-        if (taskExists) {
-          return prevTasks; // Evita duplicados
-        }
-        return [...prevTasks, response.task];
-      });
+      const response = await createTask(newTask);
+      setTasks((prevTasks) => [...prevTasks, response.task]);
     } catch (err) {
       console.error("Error al agregar tarea:", err);
       alert("Error al agregar tarea.");
@@ -76,21 +69,23 @@ export default function TaskPage() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <Navbar />
-      <div className="container mx-auto p-4">
-        {error && <p className="text-red-500">{error}</p>}
-        <TaskForm onAddTask={handleAddTask} />
-        {loading ? (
-          <p>Cargando tareas...</p>
-        ) : (
-          <TaskList
-            tasks={tasks}
-            onUpdateTask={handleUpdateTask}
-            onDeleteTask={handleDeleteTask}
-          />
-        )}
-      </div>
+    <div className="container mx-auto p-4">
+      {/* Error al cargar las tareas */}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Formulario para agregar nuevas tareas */}
+      <TaskForm onAddTask={handleAddTask} />
+
+      {/* Lista de tareas o mensaje de cargando */}
+      {loading ? (
+        <p className="text-gray-500">Cargando tareas...</p>
+      ) : (
+        <TaskList
+          tasks={tasks}
+          onUpdateTask={handleUpdateTask}
+          onDeleteTask={handleDeleteTask}
+        />
+      )}
     </div>
   );
 }

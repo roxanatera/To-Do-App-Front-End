@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
+import { useApp } from "../context/AppContext";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [generalError, setGeneralError] = useState("");
+  const { login } = useApp(); // Usa la función login del contexto
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ export default function Register() {
     if (!name.trim()) {
       newErrors.name = "El nombre es obligatorio.";
     } else if (name.trim().length < 3) {
-      newErrors.name = "El nombre debe tener al menos 3 caracteres."; 
+      newErrors.name = "El nombre debe tener al menos 3 caracteres.";
     }
     if (!email.trim()) {
       newErrors.email = "El correo es obligatorio.";
@@ -38,20 +40,18 @@ export default function Register() {
         password,
       });
 
-      // Guarda el token en localStorage
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("userName", response.data.user.name); // Guarda el nombre del usuario
-
-      // Redirige al panel de tareas directamente
-      navigate("/tasks");
+      if (response.data.token && response.data.user) {
+        // Llama a login con los datos recibidos
+        login(response.data.user.id, response.data.token, response.data.user.name);
+      } else {
+        throw new Error("Respuesta inválida del servidor.");
+      }
     } catch (error) {
-      console.error("Error al registrar usuario:", error.response?.data || error.message);
-      setErrors({
-        general: error?.response?.data?.message ?? "No se pudo completar el registro. Verifica los datos e inténtalo de nuevo.",
-      });
+      setGeneralError(
+        error.response?.data?.message || "No se pudo completar el registro. Intenta de nuevo."
+      );
     }
   };
-
   return (
     <div
       className="flex items-center justify-center min-h-screen bg-cover bg-center px-4"
