@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 
 export default function Navbar() {
+  const { isAuthenticated, userName, handleLogout } = useApp();
   const navigate = useNavigate();
-  const { handleLogout } = useApp();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userName, setUserName] = useState(""); // Estado para almacenar el nombre del usuario
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-
-    // Obtén el nombre del usuario desde localStorage
-    const storedUserName = localStorage.getItem("userName");
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
-  }, []);
 
   const goHome = () => {
     if (isAuthenticated) {
@@ -29,13 +16,12 @@ export default function Navbar() {
   };
 
   const confirmLogout = () => {
-    handleLogout(); // Limpia datos del contexto y localStorage
-    setUserName(""); // Limpia el nombre del usuario
-    setShowModal(false); // Cierra el modal
+    handleLogout();
+    setShowModal(false);
   };
 
   const cancelLogout = () => {
-    setShowModal(false); // Cierra el modal sin realizar ninguna acción
+    setShowModal(false);
   };
 
   return (
@@ -66,7 +52,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Modal de Confirmación */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">

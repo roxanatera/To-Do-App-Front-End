@@ -9,16 +9,15 @@ export const useTasks = () => {
 
   const fetchTasks = async () => {
     if (!userId) {
-      console.log("No se puede cargar tareas: userId no existe."); // Log para diagnóstico
       return;
     }
 
-    console.log("Fetching tasks for userId:", userId); // Log para diagnóstico
+    console.log("Fetching tasks for userId:", userId);
     setLoading(true);
     try {
       const response = await getTasks(userId);
-      console.log("Tasks fetched:", response.tasks); // Log para diagnóstico
-      setTasks(response.tasks || []); // Actualiza el estado con las tareas
+      console.log("Tasks fetched:", response.tasks); 
+      setTasks(response.tasks || []); 
     } catch (err) {
       console.error("Error al obtener las tareas:", err);
       setError("Error al obtener las tareas");
@@ -29,7 +28,6 @@ export const useTasks = () => {
 
   const addTask = async (newTask) => {
     if (!userId) {
-      console.log("No se puede agregar tarea: userId no existe."); // Log para diagnóstico
       return;
     }
 
@@ -45,10 +43,9 @@ export const useTasks = () => {
 
   useEffect(() => {
     if (userId) {
-      console.log("Inicializando fetchTasks para userId:", userId); // Log para diagnóstico
       fetchTasks();
     } else {
-      console.log("Limpiando tareas: userId no existe."); // Log para diagnóstico
+      console.log("Limpiando tareas: userId no existe."); 
       setTasks([]);
     }
   }, [userId]);

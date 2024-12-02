@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import TaskForm from "../components/TaskForm";
 import TaskList from "../components/TaskList";
@@ -8,11 +9,20 @@ export default function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  // Verifica la autenticación al montar el componente
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login"); // Redirige al usuario si no está autenticado
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await getTasks(); 
+        const response = await getTasks();
         setTasks(response.tasks || []);
       } catch (err) {
         console.error("Error al cargar las tareas:", err);
